@@ -8,9 +8,10 @@ public class WalletPluginJS : MonoBehaviour
 {
     /// Importing "PlugConnect"
     [DllImport("__Internal")]
-    public static extern void PlugConnect();
+    private static extern void PlugConnect();
 
-    private void Start() {
-       PlugConnect();
-   }
+    private void Start()
+    {
+        PlugConnect();
+    }
 }
