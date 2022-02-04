@@ -14,7 +14,7 @@ public static class Plug
     private static extern void PlugIsConnected(int callbackID, RequestCallback callbackPtr);
 
     [DllImport("__Internal")]
-    private static extern void PlugGetPrincipalId(int callbackID, RequestCallback callbackPtr);
+    private static extern void PlugGetPrincipal(int callbackID, RequestCallback callbackPtr);
 
     [DllImport("__Internal")]
     private static extern void PlugRequestBalance(int callbackID, RequestCallback callbackPtr);
@@ -62,15 +62,15 @@ public static class Plug
         PlugIsConnected(SetupCallback(callback), GlobalCallback);
     }
 
-    public static void GetPrincipalId(Action<string, string> callback)
+    public static void GetPrincipal(Action<string, string> callback)
     {
         // Now call the javascript function and when it is done it'll callback the C# GlobalCallback function.
-        PlugGetPrincipalId(SetupCallback(callback), GlobalCallback);
+        PlugGetPrincipal(SetupCallback(callback), GlobalCallback);
     }
 
     public static void RequestBalance(Action<string, string> callback)
     {
         // Now call the javascript function and when it is done it'll callback the C# GlobalCallback function.
-        PlugGetPrincipalId(SetupCallback(callback), GlobalCallback);
+        PlugRequestBalance(SetupCallback(callback), GlobalCallback);
     }
 }

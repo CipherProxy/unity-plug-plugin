@@ -17,6 +17,10 @@ public class DemoScript : MonoBehaviour
                     Plug.RequestBalance((r, e) => {
                         Debug.Log("[unity] Balances: " + r);
                     });
+
+                    Plug.GetPrincipal((r, e) => {
+                        Debug.Log("[unity] Principal ID: " + r);
+                    });
                 });
             } else {
                 Debug.Log("[unity] error: " + e);

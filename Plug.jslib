@@ -83,7 +83,7 @@ var candid_interface = {
 	},
 
 	// Gets principal ID. Automatically checks for connection
-	PlugGetPrincipalID: function (callbackID, callbackPtr) {
+	PlugGetPrincipal: function (callbackID, callbackPtr) {
 		window.ic.plug.agent
 			.getPrincipal()
 			.then(function (principalId) {
