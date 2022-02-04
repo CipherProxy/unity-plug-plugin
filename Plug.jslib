@@ -29,6 +29,27 @@ var candid_interface = {
 		},
 	},
 
+	PlugCreateAgent: function (callbackID, callbackPtr) {
+		window.ic.plug
+			.createAgent()
+			.then(function (r) {
+				contextObject.SendResult(
+					callbackID,
+					JSON.stringify(r),
+					null,
+					callbackPtr
+				);
+			})
+			.catch(function (e) {
+				contextObject.SendResult(
+					callbackID,
+					null,
+					JSON.stringify(e),
+					callbackPtr
+				);
+			});
+	},
+
 	PlugRequestConnect: function (
 		callbackID,
 		whitelistJsonPtr,
@@ -48,6 +69,38 @@ var candid_interface = {
 					null,
 					callbackPtr
 				);
+			})
+			.catch(function (e) {
+				contextObject.SendResult(
+					callbackID,
+					null,
+					JSON.stringify(e),
+					callbackPtr
+				);
+			});
+	},
+
+	PlugRequestConnectWithAgent: function (
+		callbackID,
+		whitelistJsonPtr,
+		host,
+		callbackPtr
+	) {
+		// Plug window object
+		window.ic.plug
+			.requestConnect({
+				whitelist: JSON.parse(whitelistJsonPtr)[0],
+				host: UTF8ToString(host),
+			})
+			.then(function (r) {
+				window.ic.plug.createAgent().then(function (r) {
+					contextObject.SendResult(
+						callbackID,
+						JSON.stringify(r),
+						null,
+						callbackPtr
+					);
+				});
 			})
 			.catch(function (e) {
 				contextObject.SendResult(
@@ -81,16 +134,19 @@ var candid_interface = {
 	},
 
 	// Gets principal ID. Automatically checks for connection
-	PlugGetPrincipal: function (callbackID, callbackPtr) {
-		window.ic.plug
+	PlugGetPrincipal: async function (callbackID, callbackPtr) {
+		window.ic.plug.agent
 			.getPrincipal()
 			.then(function (r) {
-				contextObject.SendResult(
-					callbackID,
-					JSON.stringify(r),
-					null,
-					callbackPtr
-				);
+				window.ic.plug.getPrincipal().then(function (r) {
+					const principalID = Candid.Principal.from(r).toText();
+					contextObject.SendResult(
+						callbackID,
+						principalID,
+						null,
+						callbackPtr
+					);
+				});
 			})
 			.catch(function (e) {
 				contextObject.SendResult(

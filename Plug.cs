@@ -11,6 +11,12 @@ public static class Plug
     private static extern void PlugRequestConnect(int callbackID, string whitelistJson, string host, RequestCallback callbackPtr);
 
     [DllImport("__Internal")]
+    private static extern void PlugRequestConnectWithAgent(int callbackID, string whitelistJson, string host, RequestCallback callbackPtr);
+
+    [DllImport("__Internal")]
+    private static extern void PlugCreateAgent(int callbackID, RequestCallback callbackPtr);
+
+    [DllImport("__Internal")]
     private static extern void PlugIsConnected(int callbackID, RequestCallback callbackPtr);
 
     [DllImport("__Internal")]
@@ -42,7 +48,7 @@ public static class Plug
 
 
     /// Setup the callback. Returns the callbackID
-    private static int SetupCallback(Action<string, string> callback) 
+    private static int SetupCallback(Action<string, string> callback)
     {
         int callbackID = callbackIDIncrementer;
         callbackIDIncrementer++;
@@ -54,6 +60,18 @@ public static class Plug
     {
         // Now call the javascript function and when it is done it'll callback the C# GlobalCallback function.
         PlugRequestConnect(SetupCallback(callback), JsonUtility.ToJson(whitelist), host, GlobalCallback);
+    }
+
+    public static void RequestConnectWithAgent(string[] whitelist, string host, Action<string, string> callback)
+    {
+        // Now call the javascript function and when it is done it'll callback the C# GlobalCallback function.
+        PlugRequestConnectWithAgent(SetupCallback(callback), JsonUtility.ToJson(whitelist), host, GlobalCallback);
+    }
+
+    public static void CreateAgent(Action<string, string> callback)
+    {
+        // Now call the javascript function and when it is done it'll callback the C# GlobalCallback function.
+        PlugCreateAgent(SetupCallback(callback), GlobalCallback);
     }
 
     public static void IsConnected(Action<string, string> callback)
