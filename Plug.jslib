@@ -41,21 +41,19 @@ var candid_interface = {
 				whitelist: JSON.parse(whitelistJsonPtr)[0],
 				host: UTF8ToString(host),
 			})
-			.then(function (publicKey) {
-				console.log(publicKey); // Log users public key when connection is made to plug
+			.then(function (r) {
 				contextObject.SendResult(
 					callbackID,
-					JSON.stringify(publicKey),
+					JSON.stringify(r),
 					null,
 					callbackPtr
 				);
 			})
-			.catch(function (error) {
-				console.log("[js-client] error: " + error); // Log error if user fails or declines to connect
+			.catch(function (e) {
 				contextObject.SendResult(
 					callbackID,
 					null,
-					JSON.stringify(error),
+					JSON.stringify(e),
 					callbackPtr
 				);
 			});
@@ -64,19 +62,19 @@ var candid_interface = {
 	PlugIsConnected: function (callbackID, callbackPtr) {
 		window.ic.plug
 			.isConnected()
-			.then(function (result) {
+			.then(function (r) {
 				contextObject.SendResult(
 					callbackID,
-					JSON.stringify(result),
+					JSON.stringify(r),
 					null,
 					callbackPtr
 				);
 			})
-			.catch(function (error) {
+			.catch(function (e) {
 				contextObject.SendResult(
 					callbackID,
 					null,
-					JSON.stringify(error),
+					JSON.stringify(e),
 					callbackPtr
 				);
 			});
@@ -84,21 +82,21 @@ var candid_interface = {
 
 	// Gets principal ID. Automatically checks for connection
 	PlugGetPrincipal: function (callbackID, callbackPtr) {
-		window.ic.plug.agent
+		window.ic.plug
 			.getPrincipal()
-			.then(function (principalId) {
+			.then(function (r) {
 				contextObject.SendResult(
 					callbackID,
-					JSON.stringify(principalId),
+					JSON.stringify(r),
 					null,
 					callbackPtr
 				);
 			})
-			.catch(function (error) {
+			.catch(function (e) {
 				contextObject.SendResult(
 					callbackID,
 					null,
-					JSON.stringify(error),
+					JSON.stringify(e),
 					callbackPtr
 				);
 			});
@@ -107,19 +105,19 @@ var candid_interface = {
 	PlugRequestBalance: function (callbackID, callbackPtr) {
 		window.ic.plug
 			.requestBalance()
-			.then(function (result) {
+			.then(function (r) {
 				contextObject.SendResult(
 					callbackID,
-					JSON.stringify(result),
+					JSON.stringify(r),
 					null,
 					callbackPtr
 				);
 			})
-			.catch(function (error) {
+			.catch(function (e) {
 				contextObject.SendResult(
 					callbackID,
 					null,
-					JSON.stringify(error),
+					JSON.stringify(e),
 					callbackPtr
 				);
 			});
