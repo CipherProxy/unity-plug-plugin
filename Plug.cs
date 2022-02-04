@@ -10,9 +10,14 @@ public static class Plug
     [DllImport("__Internal")]
     private static extern void PlugRequestConnect(int callbackID, string whitelistJson, string host, RequestCallback callbackPtr);
 
-    /*[DllImport("__Internal")]
-    private static extern void lookup(int callbackID, string keyPtr, RequestCallback callbackPtr);*/
+    [DllImport("__Internal")]
+    private static extern void PlugIsConnected(int callbackID, RequestCallback callbackPtr);
 
+    [DllImport("__Internal")]
+    private static extern void PlugGetPrincipalId(int callbackID, RequestCallback callbackPtr);
+
+    [DllImport("__Internal")]
+    private static extern void PlugRequestBalance(int callbackID, RequestCallback callbackPtr);
 
     // This is the callback, whose pointer we'll send to javascript and is called by emscripten's Runtime.dynCall.
     public delegate void RequestCallback(int callbackID, string response, string error);
@@ -45,19 +50,27 @@ public static class Plug
         return callbackID;
     }
 
-    /*public static void Lookup(string key, Action<string, string> callback)
-    {
-        int callbackID = callbackIDIncrementer;
-        callbackIDIncrementer++;
-        callbacksBook.Add(callbackID, callback);
-
-        // Now call the javascript function and when it is done it'll callback the C# GlobalCallback function.
-        lookup(callbackID, key, GlobalCallback);
-    }*/
-
     public static void RequestConnect(string[] whitelist, string host, Action<string, string> callback)
     {
         // Now call the javascript function and when it is done it'll callback the C# GlobalCallback function.
         PlugRequestConnect(SetupCallback(callback), JsonUtility.ToJson(whitelist), host, GlobalCallback);
+    }
+
+    public static void IsConnected(Action<string, string> callback)
+    {
+        // Now call the javascript function and when it is done it'll callback the C# GlobalCallback function.
+        PlugIsConnected(SetupCallback(callback), GlobalCallback);
+    }
+
+    public static void GetPrincipalId(Action<string, string> callback)
+    {
+        // Now call the javascript function and when it is done it'll callback the C# GlobalCallback function.
+        PlugGetPrincipalId(SetupCallback(callback), GlobalCallback);
+    }
+
+    public static void RequestBalance(Action<string, string> callback)
+    {
+        // Now call the javascript function and when it is done it'll callback the C# GlobalCallback function.
+        PlugGetPrincipalId(SetupCallback(callback), GlobalCallback);
     }
 }

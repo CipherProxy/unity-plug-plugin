@@ -29,10 +29,18 @@ var candid_interface = {
 		},
 	},
 
-	PlugRequestConnect: function (callbackID, whitelistJsonPtr, host, callbackPtr) {
+	PlugRequestConnect: function (
+		callbackID,
+		whitelistJsonPtr,
+		host,
+		callbackPtr
+	) {
 		// Plug window object
 		window.ic.plug
-			.requestConnect({whitelist: JSON.parse(whitelistJsonPtr)[0], host: UTF8ToString(host)})
+			.requestConnect({
+				whitelist: JSON.parse(whitelistJsonPtr)[0],
+				host: UTF8ToString(host),
+			})
 			.then(function (publicKey) {
 				console.log(publicKey); // Log users public key when connection is made to plug
 				contextObject.SendResult(
@@ -41,7 +49,6 @@ var candid_interface = {
 					null,
 					callbackPtr
 				);
-				
 			})
 			.catch(function (error) {
 				console.log("[js-client] error: " + error); // Log error if user fails or declines to connect
@@ -54,65 +61,69 @@ var candid_interface = {
 			});
 	},
 
-	/*  
-	// Canister Ids
-		
-
-		// isConnected
-		window.ic.plug.isConnected().then(function (result) {
-			console.log("Plug connection is:", result); // Log whether the plug wallet connection is true or false
-			console.log("The host is:", host); // Log the host of the connected Agent
-			console.log("The whitelisted canisters are:", whitelist); // Log the whitelisted canisters
-		});
-
-		// Persisting a connection
-		const connected = window.ic.plug.isConnected();
-		if (!connected)
-			window.ic.plug.requestConnect(whitelist, host).then(function () {
-				console.log("Whitelist approved!"); // Logs and Confirms whitelist
-			});
-
-		// Verify Connection
-		const verifyConnection = window.ic.plug.isConnected();
-		if (!verifyConnection)
-			window.ic.plug.requestConnect(whitelist, host).then(function () {
-				console.log("Verified Connection!");
-			});
-
-		// useEffect().then(function () {
-		//   console.log("Verified!");
-		// })
-
-		//// Gettings the users Principal Id
-		// window.ic.plug.agent.getPrincipal().then(function (principalId) {
-		//   console.log("Plug's user principle Id is:", principalId); // Log the users Principal Id
-		// })
-	*/
-
-	// Lookup a key in motoko canister
-	/*lookup: function (callbackID, keyPtr, callback) {
-		Candid.motoko_canister
-			.lookup(UTF8ToString(keyPtr))
-			.then(function (responseObj) {
-				// Send the link to the communicator to send it to a C# callback.
+	PlugIsConnected: function (callbackID, callbackPtr) {
+		window.ic.plug
+			.isConnected()
+			.then(function (result) {
 				contextObject.SendResult(
 					callbackID,
-					JSON.stringify(responseObj),
+					JSON.stringify(result),
 					null,
-					callback
+					callbackPtr
 				);
 			})
 			.catch(function (error) {
-				// Send the error to the communicator to send to a C# callback.
 				contextObject.SendResult(
 					callbackID,
 					null,
 					JSON.stringify(error),
-					callback
+					callbackPtr
 				);
 			});
-	},*/
+	},
 
+	// Gets principal ID. Automatically checks for connection
+	PlugGetPrincipalID: function (callbackID, callbackPtr) {
+		window.ic.plug.agent
+			.getPrincipal()
+			.then(function (principalId) {
+				contextObject.SendResult(
+					callbackID,
+					JSON.stringify(principalId),
+					null,
+					callbackPtr
+				);
+			})
+			.catch(function (error) {
+				contextObject.SendResult(
+					callbackID,
+					null,
+					JSON.stringify(error),
+					callbackPtr
+				);
+			});
+	},
+
+	PlugRequestBalance: function (callbackID, callbackPtr) {
+		window.ic.plug
+			.requestBalance()
+			.then(function (result) {
+				contextObject.SendResult(
+					callbackID,
+					JSON.stringify(result),
+					null,
+					callbackPtr
+				);
+			})
+			.catch(function (error) {
+				contextObject.SendResult(
+					callbackID,
+					null,
+					JSON.stringify(error),
+					callbackPtr
+				);
+			});
+	},
 };
 
 autoAddDeps(candid_interface, "$contextObject"); // tell emscripten about this dependency
