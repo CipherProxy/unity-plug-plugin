@@ -29,4 +29,4 @@ git clone https://gitlab.com/c5098/dfinity/unity_plug_plugin.git
 - [ ] Implement basic DAB functions
 - - this may require webpack and a dfx environment?
 - [ ] Implement basic CAP functions
-- [ ] 
+- [ ] profit?
